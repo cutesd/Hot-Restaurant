@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hot Restaurant</title>
+    <!-- Latest compiled and minified CSS & JS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <style>
+        h1 {
+            font-size: 63px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="jumbotron text-center">
+            <h1>
+                <i class="fab fa-gripfire"></i>
+                </span>Hot Restaurant</h1>
+            <h3>We have only 5 Tables! Book your seat before they are all gone!</h3>
+            <hr>
+            <a href="/tables">
+                <button class="btn btn-primary btn-lg">
+                    <i class="far fa-list-alt"></i>
+                    </span> View Tables</button>
+            </a>
+            <a href="/reserve">
+                <button class="btn btn-danger btn-lg">
+                    <i class="fas fa-credit-card"></i> Make Reservation</button>
+            </a>
+        </div>
+        <div class="alert alert-info" id="cleared">Your tables have been cleared.</div>
+        <footer class="footer">
+            <div class="container">
+                <p>
+                    <a href="#" id="clear">Clear Table</a> |
+                    <a href="/api/tables">API Table Link</a> |
+                    <a href="/api/waitlist">API Wait List</a> |
+                    <a href="">GitHub Repo</a>
+                </p>
+            </div>
+        </footer>
+
+
+    </div>
+
+    <script>
+        $("#cleared").hide();
+        $("#clear").on("click", (e) => {
+            $.post("/tables/clear").then((data) => {
+                $("#cleared").show();
+            });
+        });
+    </script>
+
+</body>
+
+</html>

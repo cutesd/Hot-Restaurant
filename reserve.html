@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Make a Reservation</title>
+  <!-- Latest compiled and minified CSS & JS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+    crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  <style>
+    h1 {
+      font-size: 63px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="jumbotron text-center">
+      <h1>
+        <i class="fab fa-gripfire"></i>Hot Restaurant</h1>
+      <h3>Current Reservations and Wait Lists</h3>
+      <hr>
+      <a href="/tables">
+        <button class="btn btn-primary btn-lg">
+          <i class="fas fa-list-alt"></i> View Tables</button>
+      </a>
+      <a href="/">
+        <button class="btn btn-lg">
+          <i class="fas fa-home"></i>
+        </button>
+      </a>
+    </div>
+    <div class="row">
+
+      <div class="col-lg-12">
+
+        <div class="alert alert-success" id="success">Your table has been added.</div>
+        <div class="alert alert-info" id="cleared">Your tables have been cleared.</div>
+
+        <div class="card mb-3" id="reservePanel">
+          <div class="card-header">
+            Table Reservation
+          </div>
+          <div class="card-body">
+
+            <form role="form">
+
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name">
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" class="form-control" id="phone">
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" id="email">
+              </div>
+
+              <div class="form-group">
+                <label for="id">Unique ID</label>
+                <input type="text" class="form-control" id="id">
+              </div>
+
+            </form>
+            <br>
+
+            <button type="submit" class="btn btn-primary btn-md" id="add-btn">Submit</button>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p>
+          <a href="#" id="clear">Clear Table</a> |
+          <a href="/api/tables">API Table Link</a> |
+          <a href="/api/waitlist">API Wait List</a> |
+          <a href="">GitHub Repo</a>
+        </p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script type="text/javascript">
+    
+    $("#success").hide();
+    $("#cleared").hide();
+
+    $("#add-btn").on("click", (e) => {
+      e.preventDefault();
+
+      var newTable = {
+        name: $("#name").val().trim(),
+        phoneNum: $("#phone").val().trim(),
+        email: $("#email").val().trim(),
+        ID: $("#id").val().trim()
+      };
+
+      // Question: What does this code do??
+      $.post("/reserve", newTable)
+        .then(function (data) {
+          console.log(data);
+          success();
+        });
+    });
+
+    function success() {
+      $("#name").val('');
+      $("#phone").val('');
+      $("#email").val('');
+      $("#id").val('');
+      $("#reservePanel").hide();
+      $("#success").show();
+    }
+
+    $("#clear").on("click", (e) => {
+      $.post("/tables/clear").then((data) => {
+        $("#cleared").show();
+      });
+    });
+  </script>
+</body>
+
+</html>

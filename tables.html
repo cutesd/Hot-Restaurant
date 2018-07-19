@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>View Tables</title>
+  <!-- Latest compiled and minified CSS & JS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+    crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  <style>
+    h1 {
+      font-size: 63px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="jumbotron text-center">
+      <h1>
+        <i class="fab fa-gripfire"></i>Hot Restaurant</h1>
+      <h3>Current Reservations and Wait Lists</h3>
+      <hr>
+      <a href="/reserve">
+        <button class="btn btn-danger btn-lg">
+          <i class="fas fa-credit-card"></i> Make Reservation</button>
+      </a>
+      <a href="/">
+        <button class="btn btn-lg">
+          <i class="fas fa-home"></i>
+        </button>
+      </a>
+    </div>
+
+    <div class="alert alert-info" id="cleared">Your tables have been cleared.</div>
+
+    <div class="row">
+
+      <div class="col-lg-12">
+
+        <div class="card mb-3">
+          <div class="card-header">
+            Current Reservations
+          </div>
+          <div class="card-body" id="tableList">
+            <!-- <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a> -->
+          </div>
+        </div>
+
+
+        <div class="card mb-3">
+          <div class="card-header">
+            Waiting List
+          </div>
+          <div class="card-body" id="waitList">
+            <!-- <h5 class="card-title">Special title treatment</h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a> -->
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p>
+          <a href="#" id="clear">Clear Table</a> |
+          <a href="/api/tables">API Table Link</a> |
+          <a href="/api/waitlist">API Wait List</a> |
+          <a href="">GitHub Repo</a>
+        </p>
+      </div>
+    </footer>
+
+    <script type="text/javascript">
+
+      $("#cleared").hide();
+
+      var tL, wL;
+
+      function getTables() {
+        $.get("/api/tables", function (data) {
+          for (var i = 0; i < data.length; i++) {
+            var card = $("<div>").addClass("card p-3 m-3");
+            card.attr("id", "table" + i);
+            $("#tableList").append(card);
+
+            $("#table" + i).append(`<h2><span class="badge badge-primary">` + (i + 1) + `</span>| ` + data[i].ID + `</h2>`);
+            tL = i;
+          }
+        });
+      }
+      function getWaitList() {
+        $.get("/api/waitlist", function (data) {
+          for (var i = 0; i < data.length; i++) {
+            var card = $("<div>").addClass("card p-3 m-3");
+            card.attr("id", "wl" + i);
+            $("#waitList").append(card);
+
+            $("#wl" + i).append(`<h2><span class="badge badge-primary">` + (i + 1) + `</span>| ` + data[i].ID + `</h2>`);
+            wL = i;
+          }
+        });
+      }
+
+      $("#clear").on("click", (e) => {
+        $.post("/tables/clear").then((data) => {
+          $("#cleared").show();
+          for (var i = 0; i <= tL; i++) {
+            $("#table" + i).remove();
+          }
+          for (var i = 0; i <= wL; i++) {
+            $("#wl" + i).remove();
+          }
+
+        });
+      });
+
+      getTables();
+      getWaitList();
+
+    </script>
+
+</body>
+
+</html>
